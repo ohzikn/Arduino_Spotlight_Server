@@ -187,7 +187,14 @@ namespace WpfApp11
             if (statusMessage.Item2 != null && statusMessage.Item2.Length != 0)
             {
                 Recieved_Box.AppendText("Client -> " + statusMessage.Item2 + "\n");
-                RgbUnpack(statusMessage.Item2);
+                if (char.Parse(statusMessage.Item2.Substring(0, 1)) == '#')
+                {
+                    RgbUnpack(statusMessage.Item2.Substring(1));
+                }
+                else if (char.Parse(statusMessage.Item2.Substring(0, 1)) == '@')
+                {
+                    CmdProcess(statusMessage.Item2.Substring(1));
+                }
             }
 
         }
@@ -200,6 +207,10 @@ namespace WpfApp11
             if (NetworkInterface.GetIsNetworkAvailable()) CoreStart();
         }
 
+        private void CmdProcess(string command)
+        {
+            // 請在這邊處理導向
+        }
         private void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {
             if (e.IsAvailable)
@@ -403,59 +414,7 @@ namespace WpfApp11
                 return false;
             }
         }
-        private void BtnTracking_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("請確保追蹤目標目前為靜止狀態", "提醒", MessageBoxButton.OK, MessageBoxImage.Warning);
 
-            string[] strArr = new string[1];
-            string sArguments = @"tracking_IPCAM.py";//python
-            //strArr[0] = "0";//傳入參數
-            strArr[0] = "http://root:A107222@192.168.0.162/mjpg/1/video.mjpg";//IPCAM
-            RunPythonScript(sArguments, "-u", strArr);
-
-
-            //接收IPCAM即時畫面並顯示
-            //_mjpeg = new MjpegDecoder();
-            //_mjpeg.FrameReady += mjpeg_FrameReady;
-            //_mjpeg.ParseStream(new Uri("http://root:A107222@192.168.0.162/mjpg/1/video.mjpg"));
-
-
-            BtnStop.IsEnabled = true;
-
-        }
-        private void BtnStop_Click(object sender, RoutedEventArgs e)
-        {
-            //停止串流
-            //_mjpeg.StopStream();
-        }
-        /*private void mjpeg_FrameReady(object sender, FrameReadyEventArgs e)
-        {
-            //播放即時畫面
-            IMGIPcam.Source = e.BitmapImage;
-        }*/
-
-        private void BtnWebcam_Click(object sender, RoutedEventArgs e)
-        {
-            //===call python          
-            string[] strArr = new string[1];//引數列表
-            string sArguments = @"ROI_color.py";//這裡是python的檔名字
-            strArr[0] = "1";
-            RunPythonScript(sArguments, "-u", strArr);
-            //RunCMD(sArguments, "", strArr);
-
-            //====透過emgu把webcam畫面接到xaml上
-            this.Closing += MainWindow_Closing;
-            //_capture = new Capture(0);    //預設鏡頭 測試用
-            //_capture = new Capture(1);//新版emgu改成VideoCapture
-            //_capture.ImageGrabbed += _capture_ImageGrabbed;
-            //_frame = new Mat();
-            //_capture.Start();
-            ComponentDispatcher.ThreadIdle += ComponentDispatcher_ThreadIdle;
-
-            ShowMainColor();
-
-            BtnTracking.IsEnabled = true;
-        }
         #region//for CA python
         //呼叫python核心程式碼
         public static void RunPythonScript(string sArgName, string args = "", params string[] teps)
@@ -821,6 +780,60 @@ namespace WpfApp11
         private void Sent_Box_TextChanged(object sender, TextChangedEventArgs e)
         {
             Sent_Box.ScrollToEnd();
+        }
+
+        private void BtnTracking_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("請確保追蹤目標目前為靜止狀態", "提醒", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+            string[] strArr = new string[1];
+            string sArguments = @"tracking_IPCAM.py";//python
+            //strArr[0] = "0";//傳入參數
+            strArr[0] = "http://root:A107222@192.168.0.162/mjpg/1/video.mjpg";//IPCAM
+            RunPythonScript(sArguments, "-u", strArr);
+
+
+            //接收IPCAM即時畫面並顯示
+            //_mjpeg = new MjpegDecoder();
+            //_mjpeg.FrameReady += mjpeg_FrameReady;
+            //_mjpeg.ParseStream(new Uri("http://root:A107222@192.168.0.162/mjpg/1/video.mjpg"));
+
+
+            BtnStop.IsEnabled = true;
+
+        }
+        private void BtnStop_Click(object sender, RoutedEventArgs e)
+        {
+            //停止串流
+            //_mjpeg.StopStream();
+        }
+        /*private void mjpeg_FrameReady(object sender, FrameReadyEventArgs e)
+        {
+            //播放即時畫面
+            IMGIPcam.Source = e.BitmapImage;
+        }*/
+
+        private void BtnWebcam_Click(object sender, RoutedEventArgs e)
+        {
+            //===call python          
+            string[] strArr = new string[1];//引數列表
+            string sArguments = @"ROI_color.py";//這裡是python的檔名字
+            strArr[0] = "1";
+            RunPythonScript(sArguments, "-u", strArr);
+            //RunCMD(sArguments, "", strArr);
+
+            //====透過emgu把webcam畫面接到xaml上
+            this.Closing += MainWindow_Closing;
+            //_capture = new Capture(0);    //預設鏡頭 測試用
+            //_capture = new Capture(1);//新版emgu改成VideoCapture
+            //_capture.ImageGrabbed += _capture_ImageGrabbed;
+            //_frame = new Mat();
+            //_capture.Start();
+            ComponentDispatcher.ThreadIdle += ComponentDispatcher_ThreadIdle;
+
+            ShowMainColor();
+
+            BtnTracking.IsEnabled = true;
         }
     }
 }//end
