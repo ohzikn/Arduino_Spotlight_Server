@@ -1,0 +1,249 @@
+﻿<Window x:Class="WpfApp11.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp11"
+        mc:Ignorable="d"
+        Title="MainWindow" Background="LightBlue" Height="750" Width="800" ResizeMode="NoResize" SizeToContent="Height" Loaded="Window_Loaded">
+    <Window.Resources>
+        <Storyboard x:Key="Animate_Button_1">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetName="ServerToggle_Button" Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)">
+                <EasingColorKeyFrame KeyTime="00:00:00.2000000" Value="LightGreen"/>
+                <EasingColorKeyFrame KeyTime="00:00:00.6000000" Value="#FFDDDDDD"/>
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="Animate_Button_2">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetName="ArduinoConnect_Button" Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)">
+                <EasingColorKeyFrame KeyTime="00:00:00.2000000" Value="LightGreen"/>
+                <EasingColorKeyFrame KeyTime="00:00:00.6000000" Value="#FFDDDDDD"/>
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="Animate_Button_3">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetName="SendRgb_Button" Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)">
+                <EasingColorKeyFrame KeyTime="00:00:00.2000000" Value="LightGreen"/>
+                <EasingColorKeyFrame KeyTime="00:00:00.6000000" Value="#FFDDDDDD"/>
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <DockPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="20" Margin="0, 0, 0, 0">
+            <TextBlock x:Name="Status_Block" Text="Status"/>
+        </StatusBar>
+        <UniformGrid DockPanel.Dock="Right" Width="300" Columns="1" Rows="2">
+            <UniformGrid.Resources>
+                <Style TargetType="{x:Type DockPanel}">
+                    <Setter Property="Margin" Value="8"/>
+                </Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="TextAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="16"/>
+                </Style>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderBrush" Value="Snow"/>
+                    <Setter Property="Width" Value="250"/>
+                    <Setter Property="Height" Value="250"/>
+                    <Setter Property="Margin" Value="8"/>
+                    <Setter Property="Background" Value="White"/>
+                </Style>
+            </UniformGrid.Resources>
+            <DockPanel LastChildFill="False" HorizontalAlignment="Stretch">
+                <TextBlock DockPanel.Dock="Top" Text="全向攝影機影像"/>
+                <Border  DockPanel.Dock="Top">
+                    <Image x:Name="IMGIPcam"/>
+                </Border>
+                <Button  x:Name="BtnTracking" Content="選擇" Width="80" Height="20" Click="BtnTracking_Click" Background="#FFDDDDDD" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" DockPanel.Dock="Top"/>
+                <Button  x:Name="BtnStop" Content="停止連接" Width="80" Height="20" Click="BtnStop_Click" Background="#FFDDDDDD" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" DockPanel.Dock="Top" Margin="0,10,0,0"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Webcam 影像"/>
+                <Border DockPanel.Dock="Top">
+                    <Image x:Name="IMGwebcam"/>
+                </Border>
+                <Button  x:Name="BtnWebcam" Content="連接webcam" Width="80" Height="20" Click="BtnWebcam_Click" Background="#FFDDDDDD" DockPanel.Dock="Left"/>
+            </DockPanel>
+        </UniformGrid>
+        <StackPanel>
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+                <Style TargetType="{x:Type TextBlock}" x:Key="Title">
+                    <Setter Property="Margin" Value="4"/>
+                    <Setter Property="FontSize" Value="24"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+                <Style TargetType="{x:Type GroupBox}">
+                    <Setter Property="Margin" Value="16, 8"/>
+                </Style>
+            </StackPanel.Resources>
+            <DockPanel Margin="0, 0, 0, 4">
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource Title}" Text="Arduino 燈具伺服器"/>
+                <ScrollViewer Height="500">
+                    <StackPanel>
+                        <GroupBox Header="手機連接">
+                            <DockPanel Margin="16">
+                                <Button x:Name="ServerToggle_Button" DockPanel.Dock="Left" Height="20" Width="80" Click="ServerToggle_Button_Click" Background="#FFDDDDDD"/>
+                                <TextBlock x:Name="ServerHint_Block" Text="Status Text" Margin="16, 0" TextWrapping="WrapWithOverflow"/>
+                            </DockPanel>
+                        </GroupBox>
+                        <GroupBox Header="燈具連接">
+                            <DockPanel Margin="16">
+                                <Button x:Name="ArduinoConnect_Button" DockPanel.Dock="Left" Height="20" Width="80" Click="ArduinoConnect_Button_Click" Background="#FFDDDDDD"/>
+                                <UniformGrid Margin="16, 0" Columns="2" Rows="1">
+                                    <DockPanel>
+                                        <TextBlock Margin="4" Text="IP:"/>
+                                        <TextBox x:Name="ArduinoIP_Box" InputMethod.IsInputMethodEnabled="False" Margin="4"/>
+                                    </DockPanel>
+                                    <DockPanel>
+                                        <TextBlock Margin="4" Text="Port:"/>
+                                        <TextBox x:Name="ArduinoPort_Box" InputMethod.IsInputMethodEnabled="False" Margin="4"/>
+                                    </DockPanel>
+                                </UniformGrid>
+                            </DockPanel>
+                        </GroupBox>
+                        <GroupBox Header="燈具狀態">
+                            <StackPanel Margin="8">
+                                <StackPanel.Resources>
+                                    <Style TargetType="{x:Type DockPanel}">
+                                        <Setter Property="Margin" Value="0, 4"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Left" Text="Red" Width="40" Background="#FFFF7D7D" TextAlignment="Center" Margin="0,0,3,0" HorizontalAlignment="Stretch"/>
+                                    <TextBox x:Name="R_Block" DockPanel.Dock="Right" TextAlignment="Center" Width="40" Text="{Binding ElementName=R_Slider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="3,0,0,0" />
+                                    <Slider x:Name="R_Slider" ValueChanged="R_Slider_ValueChanged" Maximum="255" SmallChange="1"/>
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Left" Text="Green" Width="40" Margin="0,0,3,0" Background="#FF7DFF7D" TextAlignment="Center"/>
+                                    <TextBox x:Name="G_Block" DockPanel.Dock="Right" TextAlignment="Center" Width="40" Text="{Binding ElementName=G_Slider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="3,0,0,0"/>
+                                    <Slider x:Name="G_Slider" ValueChanged="G_Slider_ValueChanged" Maximum="255" SmallChange="1"/>
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Left" Text="Blue" Width="40" Margin="0,0,3,0" TextAlignment="Center" Background="#FF7D7DFF"/>
+                                    <TextBox x:Name="B_Block" DockPanel.Dock="Right" TextAlignment="Center" Width="40" Text="{Binding ElementName=B_Slider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="3,0,0,0"/>
+                                    <Slider x:Name="B_Slider" ValueChanged="B_Slider_ValueChanged" Maximum="255" SmallChange="1"/>
+                                </DockPanel>
+                                <DockPanel HorizontalAlignment="Center">
+                                    <Button x:Name="SendRgb_Button" Content="Send" Height="20" Width="80"  Click="SendRgb_Button_Click" Background="#FFDDDDDD" HorizontalAlignment="Stretch" DockPanel.Dock="Left"/>
+                                    <Button x:Name="Brighten_Button" Content="Brighten"  Click="Brighten_Button_Click" Background="#FFDDDDDD" DockPanel.Dock="Left" Width="80" Margin="15,0,0,0"/>
+                                    <Button x:Name="D65_Button" Content="D65"  Click="D65_Button_Click" Background="#FFDDDDDD" DockPanel.Dock="Left" Width="80" Margin="15,0,0,0"/>
+                                </DockPanel>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="影像色彩分析">
+                            <GroupBox.Resources>
+                                <Style TargetType="UniformGrid">
+                                    <Setter Property="Margin" Value="8"/>
+                                </Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Margin" Value="8"/>
+                                </Style>
+                            </GroupBox.Resources>
+                            <UniformGrid Columns="3">
+                                <StackPanel>
+                                    <TextBlock Text="最高佔色比:" x:Name="P1"/>
+                                    <UniformGrid Columns="3">
+                                        <TextBlock Text="R:" x:Name="R1"/>
+                                        <TextBlock Text="G:" x:Name="G1"/>
+                                        <TextBlock Text="B:" x:Name="B1"/>
+                                    </UniformGrid>
+                                    <TextBlock Text="" FontSize="32" FontWeight="Bold" TextAlignment="Center" Background="White" x:Name="C1"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="第二佔色比:" x:Name="P2"/>
+                                    <UniformGrid Columns="3">
+                                        <TextBlock Text="R:" x:Name="R2"/>
+                                        <TextBlock Text="G:" x:Name="G2"/>
+                                        <TextBlock Text="B:" x:Name="B2"/>
+                                    </UniformGrid>
+                                    <TextBlock Text="" FontSize="32" FontWeight="Bold" TextAlignment="Center" Background="White" x:Name="C2"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="第三佔色比:" x:Name="P3"/>
+                                    <UniformGrid Columns="3">
+                                        <TextBlock Text="R:" x:Name="R3"/>
+                                        <TextBlock Text="G:" x:Name="G3"/>
+                                        <TextBlock Text="B:" x:Name="B3"/>
+                                    </UniformGrid>
+                                    <TextBlock Text="" FontSize="32" FontWeight="Bold" TextAlignment="Center" Background="White" x:Name="C3"/>
+                                </StackPanel>
+                                <!--<Button x:Name="CA_Button" Content="CA" Height="20" Width="80"  Click="ShowMainColor" Background="#FFDDDDDD"/>-->
+                            </UniformGrid>
+                        </GroupBox>
+                        <GroupBox Header="燈具2連接">
+                            <DockPanel Margin="16">
+                                <Button x:Name="Arduino2Connect_Button" DockPanel.Dock="Left" Height="20" Width="80" Click="Arduino2Connect_Button_Click" Background="#FFDDDDDD"/>
+                                <UniformGrid Margin="16, 0" Columns="2" Rows="1">
+                                    <DockPanel>
+                                        <TextBlock Margin="4" Text="IP:"/>
+                                        <TextBox x:Name="Arduino2IP_Box" InputMethod.IsInputMethodEnabled="False" Margin="4"/>
+                                    </DockPanel>
+                                    <DockPanel>
+                                        <TextBlock Margin="4" Text="Port:"/>
+                                        <TextBox x:Name="Arduino2Port_Box" InputMethod.IsInputMethodEnabled="False" Margin="4"/>
+                                    </DockPanel>
+                                </UniformGrid>
+                            </DockPanel>
+                        </GroupBox>
+                        <!--<GroupBox Header="燈具2顏色">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <StackPanel.Resources>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Margin" Value="8"/>
+                                        <Setter Property="Width" Value="60"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <TextBlock Text="顏色調整"/>
+                                <Button Content="Reset" Tag="R000G000B000" Click="Arduino2ColorUpdate_Click"/>
+                                <Button Content="Yellow" Background="Yellow" Tag="R255G255B000" Click="Arduino2ColorUpdate_Click"/>
+                                <Button Content="White" Background="White" Tag="R255G255B255" Click="Arduino2ColorUpdate_Click"/>
+                                <Button Content="Blue" Foreground="Snow" Background="Blue" Tag="R000G000B255" Click="Arduino2ColorUpdate_Click"/>
+                            </StackPanel>
+                        </GroupBox>
+                        -->
+                        <GroupBox Header="燈具2狀態">
+                            <StackPanel Margin="8">
+                                <StackPanel.Resources>
+                                    <Style TargetType="{x:Type DockPanel}">
+                                        <Setter Property="Margin" Value="0, 4"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Left" Text="Red" Width="40" Background="#FFFF7D7D" TextAlignment="Center" Margin="0,0,3,0" HorizontalAlignment="Stretch"/>
+                                    <TextBox x:Name="R2_Block" DockPanel.Dock="Right" TextAlignment="Center" Width="40" Text="{Binding ElementName=R2_Slider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="3,0,0,0"/>
+                                    <Slider x:Name="R2_Slider" ValueChanged="R2_Slider_ValueChanged" Maximum="255" SmallChange="1"/>
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Left" Text="Green" Width="40" Margin="0,0,3,0" Background="#FF7DFF7D" TextAlignment="Center"/>
+                                    <TextBox x:Name="G2_Block" DockPanel.Dock="Right" TextAlignment="Center" Width="40" Text="{Binding ElementName=G2_Slider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="3,0,0,0"/>
+                                    <Slider x:Name="G2_Slider" ValueChanged="G2_Slider_ValueChanged" Maximum="255" SmallChange="1"/>
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Left" Text="Blue" Width="40" Margin="0,0,3,0" TextAlignment="Center" Background="#FF7D7DFF"/>
+                                    <TextBox x:Name="B2_Block" DockPanel.Dock="Right" TextAlignment="Center" Width="40" Text="{Binding ElementName=B2_Slider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="3,0,0,0"/>
+                                    <Slider x:Name="B2_Slider" ValueChanged="B2_Slider_ValueChanged" Maximum="255" SmallChange="1"/>
+                                </DockPanel>
+                                <DockPanel HorizontalAlignment="Center">
+                                    <Button x:Name="SendRgb2_Button" Content="Send" Click="SendRgb2_Button_Click"  Background="#FFDDDDDD" DockPanel.Dock="Left" Width="80" Margin="15,0,0,0"/>
+                                    <Button x:Name="Brighten2_Button" Content="Brighten"  Click="Brighten2_Button_Click" Background="#FFDDDDDD" DockPanel.Dock="Left" Width="80" Margin="15,0,0,0"/>
+                                </DockPanel>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+            <UniformGrid Columns="2">
+                <StackPanel>
+                    <TextBlock TextAlignment="Center" Text="Recieved Data"/>
+                    <TextBox x:Name="Recieved_Box" Margin="20, 10" Height="100" VerticalScrollBarVisibility="Visible" TextWrapping="WrapWithOverflow" IsReadOnly="True" Foreground="black" TextChanged="Recieved_Box_TextChanged"/>
+                </StackPanel>
+                <StackPanel >
+                    <TextBlock TextAlignment="Center" Text="Sent Data"/>
+                    <TextBox x:Name="Sent_Box" Margin="20, 10" Height="100" VerticalScrollBarVisibility="Visible" TextWrapping="WrapWithOverflow" IsReadOnly="True" Foreground="black" TextChanged="Sent_Box_TextChanged"/>
+                </StackPanel>
+            </UniformGrid>
+        </StackPanel>
+    </DockPanel>
+</Window>

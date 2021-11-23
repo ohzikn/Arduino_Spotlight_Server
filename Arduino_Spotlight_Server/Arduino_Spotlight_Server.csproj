@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Legecy\Camera.cs" />
+    <Compile Remove="Legecy\ColorModel.cs" />
+    <Compile Remove="Legecy\FileSystem.cs" />
+    <Compile Remove="Legecy\Phone.cs" />
+    <Compile Remove="Legecy\Program.cs" />
+    <Compile Remove="Legecy\QueryDB.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Legecy\Camera.cs" />
+    <None Include="Legecy\ColorModel.cs" />
+    <None Include="Legecy\FileSystem.cs" />
+    <None Include="Legecy\Phone.cs" />
+    <None Include="Legecy\Program.cs" />
+    <None Include="Legecy\QueryDB.cs" />
+  </ItemGroup>
+
+</Project>
