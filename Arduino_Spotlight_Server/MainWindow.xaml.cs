@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.ComponentModel;
-using System.Windows.Media.Animation;
-using System.IO;
-using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using dColor = System.Windows.Media.Color;
 //using Emgu.CV;
 //using Emgu.CV.Structure;
@@ -51,11 +51,11 @@ namespace WpfApp11
         string[] ContentObj;
 
         //webcam
-        //private Capture _capture = null;
-        //private Mat _frame;
+        private Capture _capture = null;
+        private Mat _frame;
 
         //IPCAM
-        //MjpegDecoder _mjpeg;
+        MjpegDecoder _mjpeg;
 
         public MainWindow()
         {
@@ -175,6 +175,7 @@ namespace WpfApp11
             if (statusMessage.Item2 != null && statusMessage.Item2.Length != 0)
             {
                 Recieved_Box.AppendText("Client -> " + statusMessage.Item2 + "\n");
+                // This part is added at 12/17
                 if (char.Parse(statusMessage.Item2.Substring(0, 1)) == '#')
                 {
                     RgbUnpack(statusMessage.Item2.Substring(1));
@@ -195,6 +196,7 @@ namespace WpfApp11
             if (NetworkInterface.GetIsNetworkAvailable()) CoreStart();
         }
 
+        // This part is added at 12/17
         private void CmdProcess(string command)
         {
             // 請在這邊處理導向
@@ -498,19 +500,19 @@ namespace WpfApp11
         #region //for webcam
         private void ComponentDispatcher_ThreadIdle(object sender, EventArgs e)
         {
-            /*using (var imageFrame = _capture.QueryFrame().ToImage<Bgr, Byte>())
+            using (var imageFrame = _capture.QueryFrame().ToImage<Bgr, Byte>())
             {
                 if (imageFrame != null)
                 {
                     IMGwebcam.Source = ConvertBitmapToImageSource(imageFrame.Bitmap);
                 }
-            }*/
+            }
         }
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //_capture.Dispose();
+            _capture.Dispose();
         }
-        /*private ImageSource ConvertBitmapToImageSource(Bitmap imToConvert)
+        private ImageSource ConvertBitmapToImageSource(Bitmap imToConvert)
         {
             Bitmap bmp = new Bitmap(imToConvert);
             MemoryStream ms = new MemoryStream();
@@ -522,7 +524,7 @@ namespace WpfApp11
             image.EndInit();
             ImageSource sc = (ImageSource)image;
             return sc;
-        }*/
+        }
 
         #endregion
     }
